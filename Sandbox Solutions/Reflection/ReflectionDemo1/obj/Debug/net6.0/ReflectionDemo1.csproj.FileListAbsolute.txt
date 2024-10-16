@@ -1,0 +1,15 @@
+C:\Users\tgoli\Documents\GitHub\VCS\Sandbox Solutions\Reflection\ReflectionDemo1\bin\Debug\net6.0\ReflectionDemo1.exe
+C:\Users\tgoli\Documents\GitHub\VCS\Sandbox Solutions\Reflection\ReflectionDemo1\bin\Debug\net6.0\ReflectionDemo1.deps.json
+C:\Users\tgoli\Documents\GitHub\VCS\Sandbox Solutions\Reflection\ReflectionDemo1\bin\Debug\net6.0\ReflectionDemo1.runtimeconfig.json
+C:\Users\tgoli\Documents\GitHub\VCS\Sandbox Solutions\Reflection\ReflectionDemo1\bin\Debug\net6.0\ReflectionDemo1.dll
+C:\Users\tgoli\Documents\GitHub\VCS\Sandbox Solutions\Reflection\ReflectionDemo1\bin\Debug\net6.0\ReflectionDemo1.pdb
+C:\Users\tgoli\Documents\GitHub\VCS\Sandbox Solutions\Reflection\ReflectionDemo1\obj\Debug\net6.0\ReflectionDemo1.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\tgoli\Documents\GitHub\VCS\Sandbox Solutions\Reflection\ReflectionDemo1\obj\Debug\net6.0\ReflectionDemo1.AssemblyInfoInputs.cache
+C:\Users\tgoli\Documents\GitHub\VCS\Sandbox Solutions\Reflection\ReflectionDemo1\obj\Debug\net6.0\ReflectionDemo1.AssemblyInfo.cs
+C:\Users\tgoli\Documents\GitHub\VCS\Sandbox Solutions\Reflection\ReflectionDemo1\obj\Debug\net6.0\ReflectionDemo1.csproj.CoreCompileInputs.cache
+C:\Users\tgoli\Documents\GitHub\VCS\Sandbox Solutions\Reflection\ReflectionDemo1\obj\Debug\net6.0\ReflectionDemo1.sourcelink.json
+C:\Users\tgoli\Documents\GitHub\VCS\Sandbox Solutions\Reflection\ReflectionDemo1\obj\Debug\net6.0\ReflectionDemo1.dll
+C:\Users\tgoli\Documents\GitHub\VCS\Sandbox Solutions\Reflection\ReflectionDemo1\obj\Debug\net6.0\refint\ReflectionDemo1.dll
+C:\Users\tgoli\Documents\GitHub\VCS\Sandbox Solutions\Reflection\ReflectionDemo1\obj\Debug\net6.0\ReflectionDemo1.pdb
+C:\Users\tgoli\Documents\GitHub\VCS\Sandbox Solutions\Reflection\ReflectionDemo1\obj\Debug\net6.0\ReflectionDemo1.genruntimeconfig.cache
+C:\Users\tgoli\Documents\GitHub\VCS\Sandbox Solutions\Reflection\ReflectionDemo1\obj\Debug\net6.0\ref\ReflectionDemo1.dll
