@@ -1,4 +1,6 @@
-﻿namespace ReflectionDemo1
+﻿using System.Reflection;
+
+namespace ReflectionDemo1
 {
     internal class Program
     {
@@ -10,7 +12,15 @@
 
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello, World!");
+            Type type = typeof(Student);
+
+            PropertyInfo[] fields = type.GetProperties();
+
+            foreach (PropertyInfo field in fields)
+            {
+                Console.WriteLine(field.Name);
+                Console.WriteLine(field.PropertyType);
+            }
         }
     }
 }
