@@ -4,7 +4,7 @@ namespace ADO.NET_demo
 {
     internal class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             string connectionString = "Server=.;Database=Demo;Trusted_Connection=True;TrustServerCertificate=True;";
             SqlConnection connection = new SqlConnection(connectionString);
@@ -14,7 +14,7 @@ namespace ADO.NET_demo
             using (connection)
             {
                 SqlCommand command = new SqlCommand("SELECT * FROM Krum;", connection);
-                SqlDataReader reader = command.ExecuteReader();
+                SqlDataReader reader = await command.ExecuteReaderAsync();
 
                 using (reader)
                 {
