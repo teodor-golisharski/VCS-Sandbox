@@ -23,6 +23,15 @@ void InsertCountries(SqlConnection connection, string name)
     cmd.ExecuteNonQuery();
 }
 
+void InsertTowns(SqlConnection connection, string name, int countryCode)
+{
+    SqlCommand cmd = new SqlCommand("INSERT INTO Towns ([Name], CountryCode) VALUES (@name, @countryCode)", connection);
+    cmd.Parameters.AddWithValue("@name", name);
+    cmd.Parameters.AddWithValue("@countryCode", countryCode);
+
+    cmd.ExecuteNonQuery();
+}
+
 string connectionString = @"Server=.;Trusted_Connection=True;TrustServerCertificate=True;";
 
 SqlConnection connection = new SqlConnection(connectionString);
@@ -30,15 +39,7 @@ connection.Open();
 
 using (connection)
 {
-    //CreateDB(connection, "MinionsDB");
-    //UseDB(connection, "MinionsDB");
+    UseDB(connection, "MinionsDB");
 
-    //InsertCountries(connection, "Bulgaria");
-    //InsertCountries(connection, "England");
-    //InsertCountries(connection, "Cyprus");
-    //InsertCountries(connection, "Germany");
-    //InsertCountries(connection, "Norway");
-
-    SqlCommand command = new SqlCommand("SELECT * FROM Countries", connection);
-    command.ExecuteNonQuery();
+    
 }
