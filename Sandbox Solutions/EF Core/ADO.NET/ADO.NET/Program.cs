@@ -116,10 +116,44 @@ async Task AddMinionAsync(SqlConnection connection)
     await InsertMinionsVillainsAsync(connection, minionId, villainId);
     Console.WriteLine($"Successfully added {minionName} to be minion of {villainName}");
 }
-
 async Task ChangeTownNamesCasingAsync(SqlConnection connection)
 {
+    string countryName = Console.ReadLine()!;
 
+    SqlCommand cmd = new SqlCommand(@"
+        UPDATE Towns
+        SET [Name] = UPPER(Name)
+        WHERE CountryCode = (SELECT c.Id FROM Countries AS c WHERE c.[Name] = @countryName)",
+        connection);
+    cmd.Parameters.AddWithValue("@countryName", countryName);
+
+    await cmd.ExecuteNonQueryAsync();
+
+    SqlCommand cmd2 = new SqlCommand(@"
+        SELECT [Name] FROM Towns
+        WHERE CountryCode = (SELECT c.Id FROM Countries AS c WHERE c.[Name] = @countryName)",
+        connection);
+    cmd2.Parameters.AddWithValue("@countryName", countryName);
+
+    List<string> names = new List<string>();
+
+    SqlDataReader reader = await cmd2.ExecuteReaderAsync();
+    using (reader)
+    {
+        while (await reader.ReadAsync())
+        {
+            names.Add(reader.GetString(0));
+        }
+    }
+    if (names.Count == 0)
+    {
+        Console.WriteLine("No town names were affected.");
+    }
+    else
+    {
+        Console.WriteLine($"{names.Count} town names were affected");
+        Console.WriteLine($"{string.Join(", ", names)}");
+    }
 }
 
 
@@ -201,8 +235,8 @@ async Task MainAsync()
 
     using (connection)
     {
-        
+        await ChangeTownNamesCasingAsync(connection);
     }
 }
 
-MainAsync();
+await MainAsync();
