@@ -1,37 +1,43 @@
 ﻿using Microsoft.Data.SqlClient;
+using Microsoft.VisualBasic;
+using System.ComponentModel;
 
-void CreateDB(SqlConnection connection, string name)
+async Task CreateDBAsync(SqlConnection connection, string name)
 {
     SqlCommand cmd = new SqlCommand($"CREATE DATABASE {name}", connection);
 
-    cmd.ExecuteNonQuery();
+    await cmd.ExecuteNonQueryAsync();
 }
-
-void UseDB(SqlConnection connection, string name)
+async Task UseDBAsync(SqlConnection connection, string name)
 {
     SqlCommand cmd = new SqlCommand($"USE {name}", connection);
 
-    cmd.ExecuteNonQuery();
+    await cmd.ExecuteNonQueryAsync();
 }
-
-void InsertCountries(SqlConnection connection, string name)
+async Task InsertCountriesAsync(SqlConnection connection, string name)
 {
     SqlCommand cmd = new SqlCommand("INSERT INTO Countries ([Name]) VALUES (@name)", connection);
     cmd.Parameters.AddWithValue("@name", name);
 
-    cmd.ExecuteNonQuery();
+    await cmd.ExecuteNonQueryAsync();
 }
-
-void InsertTowns(SqlConnection connection, string name, int countryCode)
+async Task InsertTownsAsync(SqlConnection connection, string name, int? countryCode)
 {
-    SqlCommand cmd = new SqlCommand("INSERT INTO Towns ([Name], CountryCode) VALUES (@name, @countryCode)", connection);
+    SqlCommand cmd;
+    if (countryCode == null)
+    {
+        cmd = new SqlCommand("INSERT INTO Towns ([Name]) VALUES (@name)", connection);
+    }
+    else
+    {
+        cmd = new SqlCommand("INSERT INTO Towns ([Name], CountryCode) VALUES (@name, @countryCode)", connection);
+        cmd.Parameters.AddWithValue("@countryCode", countryCode);
+    }
     cmd.Parameters.AddWithValue("@name", name);
-    cmd.Parameters.AddWithValue("@countryCode", countryCode);
 
-    cmd.ExecuteNonQuery();
+    await cmd.ExecuteNonQueryAsync();
 }
-
-void VillianNames(SqlConnection connection)
+async Task VillianNamesAsync(SqlConnection connection)
 {
     SqlCommand cmd = new SqlCommand(@"
         SELECT v.[Name], COUNT(mv.VillainId) AS MinionsCount 
@@ -41,7 +47,7 @@ void VillianNames(SqlConnection connection)
         HAVING COUNT(mv.VillainId) > 3 
         ORDER BY COUNT(mv.VillainId);", connection);
 
-    SqlDataReader reader = cmd.ExecuteReader();
+    SqlDataReader reader = await cmd.ExecuteReaderAsync();
     using (reader)
     {
         while (reader.Read())
@@ -50,16 +56,146 @@ void VillianNames(SqlConnection connection)
         }
     }
 }
+void MinionNamesAsync(SqlConnection connection, int id)
+{
+    SqlCommand cmdValidation = new SqlCommand("SELECT [Name] FROM Villains WHERE Id = @Id", connection);
+    cmdValidation.Parameters.AddWithValue("@Id", id);
+
+    SqlDataReader sqlDataReader = cmdValidation.ExecuteReader();
+
+    string name = null;
+    if (sqlDataReader.Read())
+    {
+        name = sqlDataReader.GetString(0);
+    }
+    sqlDataReader.Close();
+
+    if (string.IsNullOrEmpty(name))
+    {
+        Console.WriteLine($"No villain with ID {id} exists in the database.");
+    }
+    else
+    {
+        SqlCommand cmd = new SqlCommand(@"
+            SELECT ROW_NUMBER() OVER (ORDER BY m.Name) AS RowNum,
+                                         m.Name, 
+                                         m.Age
+                                    FROM MinionsVillains AS mv
+                                    JOIN Minions As m ON mv.MinionId = m.Id
+                                   WHERE mv.VillainId = @Id
+                                ORDER BY m.Name 
+        ", connection);
+        cmd.Parameters.AddWithValue("@Id", id);
+
+        sqlDataReader = cmd.ExecuteReader();
+        using (sqlDataReader)
+        {
+            Console.WriteLine($"Villian: {name}");
+            while (sqlDataReader.Read())
+            {
+                Console.WriteLine($"{sqlDataReader["RowNum"]}. {sqlDataReader["Name"]} {sqlDataReader["Age"]}");
+            }
+        }
+    }
+}
+async Task AddMinionAsync(SqlConnection connection)
+{
+    string[] input = Console.ReadLine().Split();
+    string minionName = input[1];
+    int age = int.Parse(input[2]);
+    string townName = input[3];
+
+    string villainName = Console.ReadLine().Substring(9);
+
+    int townId = await EnsureTownExistsAsync(connection, townName);
+    int villainId = await EnsureVillainExistsAsync(connection, villainName);
+
+    await InsertMinionAsync(connection, minionName, age, townId);
+    int minionId = (await GetMinionIdAsync(connection, minionName)).Value;
+
+    await InsertMinionsVillainsAsync(connection, minionId, villainId);
+    Console.WriteLine($"Successfully added {minionName} to be minion of {villainName}");
+}
 
 
-string connectionString = @"Server=.;Trusted_Connection=True;TrustServerCertificate=True;";
+// Required
+async Task<int> EnsureTownExistsAsync(SqlConnection connection, string townName)
+{
+    int? townId = await GetTownIdAsync(connection, townName);
+    if (townId == null)
+    {
+        await InsertTownsAsync(connection, townName, null);
+        Console.WriteLine($"Town {townName} was added to the database.");
+        townId = await GetTownIdAsync(connection, townName);
+    }
+    return townId.Value;
+}
+
+async Task<int> EnsureVillainExistsAsync(SqlConnection connection, string villainName)
+{
+    int? villainId = await GetVillainIdAsync(connection, villainName);
+    if (villainId == null)
+    {
+        await InsertVillainAsync(connection, villainName);
+        Console.WriteLine($"Villain {villainName} was added to the database.");
+        villainId = await GetVillainIdAsync(connection, villainName);
+    }
+    return villainId.Value;
+}
+
+async Task InsertVillainAsync(SqlConnection connection, string villainName)
+{
+    using SqlCommand cmd = new SqlCommand("INSERT INTO Villains ([Name], EvilnessFactorId) VALUES (@villainName, 4)", connection);
+    cmd.Parameters.AddWithValue("@villainName", villainName);
+    await cmd.ExecuteNonQueryAsync();
+}
+async Task<int?> GetTownIdAsync(SqlConnection connection, string name)
+{
+    SqlCommand cmd = new SqlCommand("SELECT [id] FROM Towns WHERE [Name] = @name", connection);
+    cmd.Parameters.AddWithValue("@name", name);
+
+    return (int?)await cmd.ExecuteScalarAsync();
+}
+async Task<int?> GetVillainIdAsync(SqlConnection connection, string villainName)
+{
+    SqlCommand cmd = new SqlCommand("SELECT Id FROM Villains WHERE [Name] = @villainName", connection);
+    cmd.Parameters.AddWithValue("@villainName", villainName);
+
+    return (int?)await cmd.ExecuteScalarAsync();
+}
+async Task<int?> GetMinionIdAsync(SqlConnection connection, string name)
+{
+    SqlCommand cmd = new SqlCommand("SELECT Id FROM Minions WHERE [Name] = @name", connection);
+    cmd.Parameters.AddWithValue("@name", name);
+
+    return (int?)await cmd.ExecuteScalarAsync();
+}
+async Task InsertMinionAsync(SqlConnection connection, string name, int age, int townId)
+{
+    SqlCommand cmd = new SqlCommand("INSERT INTO Minions ([Name], Age, TownId) VALUES (@name, @age, @townId)", connection);
+    cmd.Parameters.AddWithValue($"@name", name);
+    cmd.Parameters.AddWithValue($"@age", age);
+    cmd.Parameters.AddWithValue($"@townId", townId);
+
+    await cmd.ExecuteNonQueryAsync();
+}
+
+async Task InsertMinionsVillainsAsync(SqlConnection connection, int minionId, int villainId)
+{
+    SqlCommand cmd = new SqlCommand("INSERT INTO MinionsVillains (MinionId, VillainId) VALUES (@minionId, @villainId)", connection);
+    cmd.Parameters.AddWithValue("@minionId", minionId);
+    cmd.Parameters.AddWithValue("@villainId", villainId);
+
+    await cmd.ExecuteNonQueryAsync();
+}
+
+
+string connectionString = @"Server=.;Database=MinionsDB;Trusted_Connection=True;TrustServerCertificate=True;";
 
 SqlConnection connection = new SqlConnection(connectionString);
-connection.Open();
+await connection.OpenAsync();
 
 using (connection)
 {
-    UseDB(connection, "MinionsDB");
-
-    VillianNames(connection);
+    await AddMinionAsync(connection);
 }
