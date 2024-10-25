@@ -117,8 +117,13 @@ async Task AddMinionAsync(SqlConnection connection)
     Console.WriteLine($"Successfully added {minionName} to be minion of {villainName}");
 }
 
+async Task ChangeTownNamesCasingAsync(SqlConnection connection)
+{
 
-// Required
+}
+
+
+// Additional
 async Task<int> EnsureTownExistsAsync(SqlConnection connection, string townName)
 {
     int? townId = await GetTownIdAsync(connection, townName);
@@ -130,7 +135,6 @@ async Task<int> EnsureTownExistsAsync(SqlConnection connection, string townName)
     }
     return townId.Value;
 }
-
 async Task<int> EnsureVillainExistsAsync(SqlConnection connection, string villainName)
 {
     int? villainId = await GetVillainIdAsync(connection, villainName);
@@ -142,7 +146,6 @@ async Task<int> EnsureVillainExistsAsync(SqlConnection connection, string villai
     }
     return villainId.Value;
 }
-
 async Task InsertVillainAsync(SqlConnection connection, string villainName)
 {
     using SqlCommand cmd = new SqlCommand("INSERT INTO Villains ([Name], EvilnessFactorId) VALUES (@villainName, 4)", connection);
@@ -179,7 +182,6 @@ async Task InsertMinionAsync(SqlConnection connection, string name, int age, int
 
     await cmd.ExecuteNonQueryAsync();
 }
-
 async Task InsertMinionsVillainsAsync(SqlConnection connection, int minionId, int villainId)
 {
     SqlCommand cmd = new SqlCommand("INSERT INTO MinionsVillains (MinionId, VillainId) VALUES (@minionId, @villainId)", connection);
@@ -190,12 +192,17 @@ async Task InsertMinionsVillainsAsync(SqlConnection connection, int minionId, in
 }
 
 
-string connectionString = @"Server=.;Database=MinionsDB;Trusted_Connection=True;TrustServerCertificate=True;";
-
-SqlConnection connection = new SqlConnection(connectionString);
-await connection.OpenAsync();
-
-using (connection)
+async Task MainAsync()
 {
-    await AddMinionAsync(connection);
+    string connectionString = @"Server=.;Database=MinionsDB;Trusted_Connection=True;TrustServerCertificate=True;";
+
+    SqlConnection connection = new SqlConnection(connectionString);
+    await connection.OpenAsync();
+
+    using (connection)
+    {
+        
+    }
 }
+
+MainAsync();
