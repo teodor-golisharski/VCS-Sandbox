@@ -155,8 +155,43 @@ async Task ChangeTownNamesCasingAsync(SqlConnection connection)
         Console.WriteLine($"{string.Join(", ", names)}");
     }
 }
+async Task PrintAllMinionNamesAsync(SqlConnection connection)
+{
+    List<string> names = new List<string>();
 
+    SqlCommand cmd = new SqlCommand(@"
+        SELECT [Name] FROM Minions
+        ", connection);
 
+    SqlDataReader reader = await cmd.ExecuteReaderAsync();
+    using (reader)
+    {
+        while(await reader.ReadAsync())
+        {
+            names.Add(reader.GetString(0));
+        }
+    }
+
+    int start = 0;
+    int end = names.Count - 1;
+
+    while (start <= end)
+    {
+        if (start == end)
+        {
+            Console.WriteLine(names[start]);
+        }
+        else
+        {
+            Console.WriteLine(names[start]);
+            Console.WriteLine(names[end]);
+        }
+
+        start++;
+        end--;
+    }
+
+}
 // Additional
 async Task<int> EnsureTownExistsAsync(SqlConnection connection, string townName)
 {
@@ -235,7 +270,7 @@ async Task MainAsync()
 
     using (connection)
     {
-        await ChangeTownNamesCasingAsync(connection);
+        await PrintAllMinionNamesAsync(connection);
     }
 }
 
