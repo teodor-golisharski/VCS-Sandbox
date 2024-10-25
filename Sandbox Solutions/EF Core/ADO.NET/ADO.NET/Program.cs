@@ -1,6 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
 
-
 void CreateDB(SqlConnection connection, string name)
 {
     SqlCommand cmd = new SqlCommand($"CREATE DATABASE {name}", connection);
@@ -32,6 +31,27 @@ void InsertTowns(SqlConnection connection, string name, int countryCode)
     cmd.ExecuteNonQuery();
 }
 
+void VillianNames(SqlConnection connection)
+{
+    SqlCommand cmd = new SqlCommand(@"
+        SELECT v.[Name], COUNT(mv.VillainId) AS MinionsCount 
+        FROM Villains AS v 
+        JOIN MinionsVillains AS mv ON v.Id = mv.VillainId 
+        GROUP BY v.Id, v.[Name] 
+        HAVING COUNT(mv.VillainId) > 3 
+        ORDER BY COUNT(mv.VillainId);", connection);
+
+    SqlDataReader reader = cmd.ExecuteReader();
+    using (reader)
+    {
+        while (reader.Read())
+        {
+            Console.WriteLine($"{reader["Name"]} - {reader["MinionsCount"]}");
+        }
+    }
+}
+
+
 string connectionString = @"Server=.;Trusted_Connection=True;TrustServerCertificate=True;";
 
 SqlConnection connection = new SqlConnection(connectionString);
@@ -41,5 +61,5 @@ using (connection)
 {
     UseDB(connection, "MinionsDB");
 
-    
+    VillianNames(connection);
 }
