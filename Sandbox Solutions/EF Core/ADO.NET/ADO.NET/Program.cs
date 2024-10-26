@@ -1,6 +1,7 @@
 ﻿using Microsoft.Data.SqlClient;
 using Microsoft.VisualBasic;
 using System.ComponentModel;
+using System.Data;
 
 async Task CreateDBAsync(SqlConnection connection, string name)
 {
@@ -166,7 +167,7 @@ async Task PrintAllMinionNamesAsync(SqlConnection connection)
     SqlDataReader reader = await cmd.ExecuteReaderAsync();
     using (reader)
     {
-        while(await reader.ReadAsync())
+        while (await reader.ReadAsync())
         {
             names.Add(reader.GetString(0));
         }
@@ -192,6 +193,38 @@ async Task PrintAllMinionNamesAsync(SqlConnection connection)
     }
 
 }
+async Task IncreaseMinionAgeAsync(SqlConnection connection)
+{
+    List<int> indexes = Console.ReadLine()
+        .Split()
+        .Select(int.Parse)
+        .ToList();
+
+    SqlCommand cmd = new SqlCommand(@"
+        UPDATE Minions
+        SET [Name] = LOWER(LEFT(Name, 1)) + SUBSTRING(Name, 2, LEN(Name)), Age += 1
+        WHERE Id = @id", connection);
+
+    cmd.Parameters.Add("@id", SqlDbType.Int);
+
+    foreach (int index in indexes)
+    {
+        cmd.Parameters["@id"].Value = index;
+        await cmd.ExecuteNonQueryAsync();
+    }
+
+    cmd = new SqlCommand("SELECT [Name], Age FROM Minions", connection);
+
+    SqlDataReader reader = await cmd.ExecuteReaderAsync();
+    using (reader)
+    {
+        while (await reader.ReadAsync())
+        {
+            Console.WriteLine($"{reader["Name"]} {reader["Age"]}");
+        }
+    }
+}
+
 // Additional
 async Task<int> EnsureTownExistsAsync(SqlConnection connection, string townName)
 {
@@ -270,7 +303,7 @@ async Task MainAsync()
 
     using (connection)
     {
-        await PrintAllMinionNamesAsync(connection);
+        await IncreaseMinionAgeAsync(connection);
     }
 }
 
