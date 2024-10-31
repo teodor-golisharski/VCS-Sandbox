@@ -176,7 +176,8 @@ namespace SoftUni
             StringBuilder sb = new StringBuilder();
 
             var employee = context.Employees
-                .Select(e => new { 
+                .Select(e => new
+                {
                     Id = e.EmployeeId,
                     FirstName = e.FirstName,
                     LastName = e.LastName,
@@ -193,12 +194,99 @@ namespace SoftUni
             return sb.ToString().TrimEnd();
         }
 
+        public static string GetDepartmentsWithMoreThan5Employees(SoftUniContext context)
+        {
+            StringBuilder sb = new StringBuilder();
 
+            var departments = context.Departments
+                .AsNoTracking()
+                .Select(d => new
+                {
+                    Name = d.Name,
+                    Manager = $"{d.Manager.FirstName} {d.Manager.LastName}",
+                    Count = d.Employees.Count(),
+                    Employees = d.Employees
+                        .OrderBy(p => p.FirstName)
+                        .ThenBy(p => p.LastName)
+                        .Select(p => new
+                        {
+                            Name = $"{p.FirstName} {p.LastName}",
+                            JobTitle = p.JobTitle
+                        })
+                        .ToArray()
+                })
+                .Where(d => d.Count > 5)
+                .OrderBy(d => d.Count)
+                .ThenBy(d => d.Name)
+                .Take(5)
+                .ToArray();
+
+            foreach (var d in departments)
+            {
+                sb.AppendLine($"{d.Name} - {d.Manager}");
+                foreach (var e in d.Employees)
+                {
+                    sb.AppendLine($"{e.Name} - {e.JobTitle}");
+                }
+            }
+
+            return sb.ToString().TrimEnd();
+        }
+
+        public static string GetLatestProjects(SoftUniContext context)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            var projects = context.Projects
+                .AsNoTracking()
+                .OrderByDescending(p => p.StartDate)
+                .Take(10)
+                .ToArray();
+
+            foreach (var item in projects.OrderBy(x => x.Name))
+            {
+                sb.AppendLine(item.Name);
+                sb.AppendLine(item.Description);
+                sb.AppendLine(item.StartDate.ToString());
+            }
+
+            return sb.ToString().Trim();
+        }
+
+        public static string IncreaseSalaries(SoftUniContext context)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            HashSet<string> departments = new HashSet<string>()
+            {
+                "Engineering",
+                "Tool Design",
+                "Marketing",
+                "Information Services"
+            };
+
+            var employees = context.Employees
+                .Where(e => departments.Contains(e.Department.Name))
+                .OrderBy(e => e.FirstName)
+                .ThenBy(e => e.LastName)
+                .ToList();
+
+            employees.ForEach(e => e.Salary = e.Salary * 1.12M);
+
+            context.SaveChanges();
+
+            foreach (var item in employees)
+            {
+                sb.AppendLine($"{item.FirstName} {item.LastName} (${item.Salary:f2})");
+            }
+
+            return sb.ToString().Trim();
+        }
 
         static void Main(string[] args)
         {
             SoftUniContext context = new SoftUniContext();
-            Console.WriteLine(GetEmployee147(context));
+            Console.WriteLine(GetLatestProjects(context));
         }
     }
 }
