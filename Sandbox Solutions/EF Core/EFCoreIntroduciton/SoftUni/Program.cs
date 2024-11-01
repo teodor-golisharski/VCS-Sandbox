@@ -283,10 +283,70 @@ namespace SoftUni
             return sb.ToString().Trim();
         }
 
+        public static string GetEmployeesByFirstNameStartingWithSa(SoftUniContext context)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            var employees = context.Employees
+                .AsNoTracking()
+                .Where(e => e.FirstName.StartsWith("Sa"))
+                .OrderBy(e => e.FirstName)
+                .ThenBy(e => e.LastName)
+                .ToList();
+
+            foreach (var item in employees)
+            {
+                sb.AppendLine($"{item.FirstName} {item.LastName} - {item.JobTitle} - (${item.Salary:F2})");
+            }
+
+            return sb.ToString().Trim();
+        }
+
+        public static string DeleteProjectById(SoftUniContext context)
+        {            
+            IQueryable<EmployeeProject> employeesProjects = context.EmployeesProjects
+                .Where(e => e.ProjectId == 2);
+
+            context.EmployeesProjects.RemoveRange(employeesProjects);
+
+
+            var project = context.Projects.Find(2);
+            context.Projects.Remove(project!);
+
+            context.SaveChanges();
+
+            var data = context.Projects
+                .Take(10)
+                .Select(x => x.Name)
+                .ToArray();
+
+            return string.Join(Environment.NewLine, data);
+        }
+
+        public static string RemoveTown(SoftUniContext context)
+        {
+            IQueryable<Address> addresses = context.Addresses
+                .Where(a => a.Town!.Name == "Seattle");
+
+            var employees = context.Employees
+                .Where(e => addresses.ToList().Contains(e.Address!))
+                .ToList();
+            employees.ForEach(e => e.AddressId = null);
+
+            int count = addresses.Count();
+            context.Addresses.RemoveRange(addresses);
+
+            var town = context.Towns.First(x => x.Name == "Seattle");
+            context.Towns.Remove(town);
+
+            context.SaveChanges();
+            return $"{count} addresses in Seattle were deleted";
+        }
+
         static void Main(string[] args)
         {
             SoftUniContext context = new SoftUniContext();
-            Console.WriteLine(GetLatestProjects(context));
+            Console.WriteLine(GetEmployeesByFirstNameStartingWithSa(context));
         }
     }
 }
