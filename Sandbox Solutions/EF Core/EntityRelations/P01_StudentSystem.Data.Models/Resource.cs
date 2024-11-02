@@ -1,4 +1,5 @@
 ﻿using P01_StudentSystem.Data.Common;
+using P01_StudentSystem.Data.Models.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -9,20 +10,9 @@ using System.Threading.Tasks;
 
 namespace P01_StudentSystem.Data.Models
 {
-    public enum ResourceType
-    {
-        Video, 
-        Presentation, 
-        Document, 
-        Other
-    }
 
     public class Resource
     {
-        public Resource()
-        {
-
-        }
 
         [Key]
         public int ResourceId { get; set; }
@@ -35,7 +25,7 @@ namespace P01_StudentSystem.Data.Models
         public string Url { get; set; }
 
         [Required]
-        public ResourceType  ResourceType  { get; set; }
+        public ResourceType ResourceType { get; set; }
 
         [Required]
         public int CourseId { get; set; }
