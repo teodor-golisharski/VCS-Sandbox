@@ -4,6 +4,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.11.35312.102
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "P01_StudentSystem", "P01_StudentSystem\P01_StudentSystem.csproj", "{399EC455-29D4-4310-A92F-AEE55FBC4C13}"
+	ProjectSection(ProjectDependencies) = postProject
+		{75E60A62-A0DC-4018-8C22-5D8C1F503131} = {75E60A62-A0DC-4018-8C22-5D8C1F503131}
+		{8DF9E18C-EA5D-40C7-9384-AF4E5936295E} = {8DF9E18C-EA5D-40C7-9384-AF4E5936295E}
+		{CA2DD912-4068-4B38-81BA-3BC3A67FFF17} = {CA2DD912-4068-4B38-81BA-3BC3A67FFF17}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "P01_StudentSystem.Data", "P01_StudentSystem.Data\P01_StudentSystem.Data.csproj", "{75E60A62-A0DC-4018-8C22-5D8C1F503131}"
 EndProject

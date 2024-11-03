@@ -22,12 +22,11 @@ namespace P01_StudentSystem.Data.Models
         public string Name { get; set; } = null!;
 
         [Required]
-        public string Url { get; set; }
+        public string Url { get; set; } = null!;
 
         [Required]
         public ResourceType ResourceType { get; set; }
 
-        [Required]
         public int CourseId { get; set; }
 
         [ForeignKey(nameof(CourseId))]

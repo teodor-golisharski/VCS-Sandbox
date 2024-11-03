@@ -7,7 +7,8 @@ namespace P01_StudentSystem.Data.Models
     {
         public Student()
         {
-            
+            StudentsCourses = new HashSet<StudentCourse>();
+            Homeworks = new HashSet<Homework>();
         }
 
         [Key]
@@ -17,11 +18,14 @@ namespace P01_StudentSystem.Data.Models
         [MaxLength(ValidationConstants.StudentNameMaxLength)]
         public string Name { get; set; } = null!;
 
-        [StringLength(ValidationConstants.StudentNameMaxLength)]
+        [StringLength(ValidationConstants.PhoneNumberLength)]
         public string? PhoneNumber { get; set; }
 
         [Required]
         public DateTime RegisteredOn { get; set; }
-        public DateTime Birthday  { get; set; }
+        public DateTime? Birthday { get; set; }
+
+        public virtual ICollection<StudentCourse> StudentsCourses { get; set; }
+        public virtual ICollection<Homework> Homeworks { get; set; }
     }
 }
