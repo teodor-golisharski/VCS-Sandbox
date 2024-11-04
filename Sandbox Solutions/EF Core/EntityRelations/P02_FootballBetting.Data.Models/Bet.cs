@@ -2,7 +2,6 @@
 using P02_FootballBetting.Data.Models.Enums;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Reflection.Metadata;
 
 namespace P02_FootballBetting.Data.Models
 {

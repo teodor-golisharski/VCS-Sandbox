@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using P01_StudentSystem.Data;
 using P02_FootballBetting.Data.Models;
 
 
