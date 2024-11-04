@@ -7,8 +7,8 @@ namespace P02_FootballBetting.Data.Models
     {
         public Color()
         {
-            TeamPrimaryKitColors = new HashSet<Team>();
-            TeamSecondaryKitColors = new HashSet<Team>();
+            PrimaryKitTeams = new HashSet<Team>();
+            SecondaryKitTeams = new HashSet<Team>();
         }
 
         [Key]
@@ -18,9 +18,9 @@ namespace P02_FootballBetting.Data.Models
         public string Name { get; set; } = null!;
 
         [InverseProperty("PrimaryKitColor")]
-        public virtual ICollection<Team> TeamPrimaryKitColors { get; set; }
+        public virtual ICollection<Team> PrimaryKitTeams { get; set; }
         
         [InverseProperty("SecondaryKitColor")]
-        public virtual ICollection<Team> TeamSecondaryKitColors { get; set; }
+        public virtual ICollection<Team> SecondaryKitTeams { get; set; }
     }
 }

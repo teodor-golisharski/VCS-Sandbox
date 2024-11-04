@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using P02_FootballBetting.Data;
 
@@ -11,9 +12,10 @@ using P02_FootballBetting.Data;
 namespace P02_FootballBetting.Data.Migrations
 {
     [DbContext(typeof(FootballBettingContext))]
-    partial class FootballBettingContextModelSnapshot : ModelSnapshot
+    [Migration("20241104223036_DatabaseFix01")]
+    partial class DatabaseFix01
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -151,8 +153,8 @@ namespace P02_FootballBetting.Data.Migrations
                     b.Property<int>("PositionId")
                         .HasColumnType("int");
 
-                    b.Property<int>("SquadNumber")
-                        .HasColumnType("int");
+                    b.Property<short>("SquadNumber")
+                        .HasColumnType("smallint");
 
                     b.Property<int>("TeamId")
                         .HasColumnType("int");
@@ -179,14 +181,14 @@ namespace P02_FootballBetting.Data.Migrations
                     b.Property<int>("GameId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Assists")
-                        .HasColumnType("int");
+                    b.Property<short>("Assists")
+                        .HasColumnType("smallint");
 
                     b.Property<int>("MinutesPlayed")
                         .HasColumnType("int");
 
-                    b.Property<int>("ScoredGoals")
-                        .HasColumnType("int");
+                    b.Property<short>("ScoredGoals")
+                        .HasColumnType("smallint");
 
                     b.HasKey("PlayerId", "GameId");
 

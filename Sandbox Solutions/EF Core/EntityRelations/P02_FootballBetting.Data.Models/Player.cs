@@ -17,7 +17,7 @@ namespace P02_FootballBetting.Data.Models
         public string Name { get; set; } = null!;
 
         [Required]
-        public short SquadNumber { get; set; }
+        public int SquadNumber { get; set; }
 
         [Required]
         public bool IsInjured { get; set; }

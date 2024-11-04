@@ -27,10 +27,10 @@ namespace P02_FootballBetting.Data.Models
         public Team AwayTeam { get; set; } = null!;
 
         [Required]
-        public sbyte HomeTeamGoals { get; set; }
+        public int HomeTeamGoals { get; set; }
 
         [Required]
-        public sbyte AwayTeamGoals { get; set; }
+        public int AwayTeamGoals { get; set; }
 
         [Required]
         public double HomeTeamBetRate { get; set; }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using P02_FootballBetting.Data.Common;
 using P02_FootballBetting.Data.Models;
 
 
@@ -56,13 +57,13 @@ namespace P02_FootballBetting.Data
             {
                 entity
                     .HasOne(t => t.PrimaryKitColor)
-                    .WithMany(c => c.TeamPrimaryKitColors)
+                    .WithMany(c => c.PrimaryKitTeams)
                     .HasForeignKey(t => t.PrimaryKitColorId)
                     .OnDelete(DeleteBehavior.NoAction);
 
                 entity
                     .HasOne(t => t.SecondaryKitColor)
-                    .WithMany(c => c.TeamSecondaryKitColors)
+                    .WithMany(c => c.SecondaryKitTeams)
                     .HasForeignKey(t => t.SecondaryKitColorId)
                     .OnDelete(DeleteBehavior.NoAction);
             });
