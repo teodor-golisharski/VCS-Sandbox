@@ -6,6 +6,13 @@ namespace P02_FootballBetting.Data.Models
 {
     public class Team
     {
+        public Team()
+        {
+            Players = new HashSet<Player>();
+            HomeGames = new HashSet<Game>();
+            AwayGames = new HashSet<Game>();
+        }
+
         [Key]
         public int TeamId { get; set; }
 
@@ -39,5 +46,13 @@ namespace P02_FootballBetting.Data.Models
 
         [ForeignKey(nameof(TownId))]
         public virtual Town Town { get; set; } = null!;
+
+        public virtual ICollection<Player> Players { get; set; }
+
+        [InverseProperty(nameof(Game.HomeTeam))]
+        public virtual ICollection<Game> HomeGames { get; set; }
+
+        [InverseProperty(nameof(Game.AwayTeam))]
+        public virtual ICollection<Game> AwayGames { get; set; }
     }
 }
