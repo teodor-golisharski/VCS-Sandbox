@@ -1,8 +1,10 @@
 {
   "ExpandedNodes": [
     "",
-    "\\Sandbox Solutions"
+    "\\Sandbox Solutions",
+    "\\Sandbox Solutions\\EF Core",
+    "\\Sandbox Solutions\\EF Core\\EFCoreIntroduciton"
   ],
-  "SelectedNode": "\\Sandbox Solutions\\EF Core",
+  "SelectedNode": "\\Sandbox Solutions\\EF Core\\EFCoreIntroduciton\\EFCoreIntroduciton.sln",
   "PreviewInSolutionExplorer": false
 }
