@@ -1,10 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using NetPay.Data.Models;
 
 namespace NetPay.Data
 {
     public class NetPayContext : DbContext
     {
         private const string connectionString = @"";
+
 
         public NetPayContext()
         {
@@ -17,6 +19,12 @@ namespace NetPay.Data
             
         }
 
+        public DbSet<Service> Services { get; set; }
+        public DbSet<Supplier> Suppliers { get; set; }
+        public DbSet<SupplierService> SuppliersServices { get; set; }
+        public DbSet<Household> Households { get; set; }
+        public DbSet<Expense> Expenses { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if(!optionsBuilder.IsConfigured)
@@ -28,6 +36,10 @@ namespace NetPay.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             //Fluent API here
+
+            modelBuilder.Entity<Expense>()
+                .Property(e => e.Amount)
+                .HasColumnType("decimal(18,2)");
 
             //Uncomment the following lines to seed the database with data
             

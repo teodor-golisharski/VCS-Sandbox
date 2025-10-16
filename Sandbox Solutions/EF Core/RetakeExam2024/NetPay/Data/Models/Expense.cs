@@ -1,5 +1,6 @@
 ﻿using NetPay.Data.Models.Enums;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace NetPay.Data.Models
 {
@@ -13,8 +14,8 @@ namespace NetPay.Data.Models
         public string ExpenseName { get; set; } = null!;
 
         [Required]
-        [Range(0.01, 100000)]
-        public double Amount { get; set; }
+        [Range(typeof(decimal), "0.01" , "100000")]
+        public decimal Amount { get; set; }
 
         [Required]
         public DateTime DueDate { get; set; }
@@ -25,11 +26,13 @@ namespace NetPay.Data.Models
         [Required]
         public int HouseholdId { get; set; }
 
+        [ForeignKey(nameof(HouseholdId))]
         public virtual Household Household { get; set; } = null!;
 
         [Required]
         public int ServiceId { get; set; }
 
+        [ForeignKey(nameof(ServiceId))]
         public virtual Service Service { get; set; } = null!;
     }
 }
